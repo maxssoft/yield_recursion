@@ -28,7 +28,7 @@ class RecursionTest {
 
     private val hierarchyFactory = HierarchyFactory()
 
-    val rootView = hierarchyFactory.createHierarchy(1000).also { root ->
+    val rootView = hierarchyFactory.createHierarchy(5000).also { root ->
         runCatching {
             root.findViewRecursion { it.id % 10 == 0  }.also {
                 println("findViewSimple: size = ${it.size}")
