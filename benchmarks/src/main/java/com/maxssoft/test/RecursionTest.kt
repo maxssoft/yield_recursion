@@ -1,6 +1,7 @@
 package com.maxssoft.test
 
 import com.maxssoft.data.View
+import com.maxssoft.func.findViewDeepRecursive
 import com.maxssoft.func.findViewQueue
 import com.maxssoft.func.findViewRecursion
 import com.maxssoft.func.findViewRecursionOpt
@@ -28,7 +29,7 @@ class RecursionTest {
 
     private val hierarchyFactory = HierarchyFactory()
 
-    val rootView = hierarchyFactory.createHierarchy(5000).also { root ->
+    val rootView = hierarchyFactory.createHierarchy(1000).also { root ->
         runCatching {
             root.findViewRecursion { it.id % 10 == 0  }.also {
                 println("findViewSimple: size = ${it.size}")
@@ -58,6 +59,12 @@ class RecursionTest {
                 println("findViewTreeIterator: size = ${it.count()}")
             }
         }.getOrElse { println("findViewTreeIterator: failed, Exception: $it") }
+
+        runCatching {
+            root.findViewDeepRecursive { it.id % 10 == 0 }.also {
+                println("findViewDeepRecursive: size = ${it.count()}")
+            }
+        }.getOrElse { println("findViewDeepRecursive: failed, Exception: $it") }
     }
 
     @Benchmark
@@ -83,5 +90,10 @@ class RecursionTest {
     @Benchmark
     fun treeIteratorBenchmark(): List<View> {
         return rootView.findViewTreeIterator { it.id % 10 == 0  }.toList()
+    }
+
+    @Benchmark
+    fun deepRecursiveBenchmark(): List<View> {
+        return rootView.findViewDeepRecursive { it.id % 10 == 0  }
     }
 }

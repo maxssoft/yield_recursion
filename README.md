@@ -29,30 +29,33 @@ public val ViewGroup.descendants: Sequence<View>
 ***depth of hierarchy = 1000***
 ```
 main summary:
-Benchmark                             Mode  Cnt      Score   Error  Units
-RecursionTest.recursionBenchmark     thrpt       31536,079          ops/s
-RecursionTest.queueBenchmark         thrpt       10242,561          ops/s
-RecursionTest.treeIteratorBenchmark  thrpt        6982,174          ops/s
-RecursionTest.yieldBenchmark         thrpt          61,194          ops/s
+Benchmark                                Mode  Cnt      Score   Error  Units
+RecursionTest.deepRecursiveBenchmark     thrpt            ---           ops/s
+RecursionTest.recursionBenchmark         thrpt       31536,079          ops/s
+RecursionTest.queueBenchmark             thrpt       10242,561          ops/s
+RecursionTest.treeIteratorBenchmark      thrpt        6982,174          ops/s
+RecursionTest.yieldBenchmark             thrpt          61,194          ops/s
 ```
 
 ***depth of hierarchy = 3000***
 ```
 main summary:
-Benchmark                             Mode  Cnt      Score   Error  Units
-RecursionTest.recursionBenchmark     thrpt       14018,770          ops/s
-RecursionTest.queueBenchmark         thrpt        6030,651          ops/s
-RecursionTest.treeIteratorBenchmark  thrpt        3182,863          ops/s
-RecursionTest.yieldBenchmark         thrpt           6,055          ops/s
+Benchmark                                Mode  Cnt      Score   Error  Units
+RecursionTest.deepRecursiveBenchmark     thrpt            ---           ops/s
+RecursionTest.recursionBenchmark         thrpt       14018,770          ops/s
+RecursionTest.queueBenchmark             thrpt        6030,651          ops/s
+RecursionTest.treeIteratorBenchmark      thrpt        3182,863          ops/s
+RecursionTest.yieldBenchmark             thrpt           6,055          ops/s
 ```
 
 ***depth of hierarchy = 5000***
 ```
 main summary:
-Benchmark                             Mode  Cnt     Score   Error  Units
-RecursionTest.recursionBenchmark     failed (StackOverflow)
-RecursionTest.queueBenchmark         thrpt       1961,384          ops/s
-RecursionTest.treeIteratorBenchmark  thrpt       1310,270          ops/s
-RecursionTest.yieldBenchmark         thrpt          1,826          ops/s
+Benchmark                                Mode  Cnt     Score   Error  Units
+RecursionTest.recursionBenchmark         failed (StackOverflow)
+RecursionTest.deepRecursiveBenchmark     thrpt           ---           ops/s
+RecursionTest.queueBenchmark             thrpt       1961,384          ops/s
+RecursionTest.treeIteratorBenchmark      thrpt       1310,270          ops/s
+RecursionTest.yieldBenchmark             thrpt          1,826          ops/s
 ```
 test source:  https://github.com/maxssoft/yield_recursion/blob/develop/benchmarks/src/main/java/com/maxssoft/test/RecursionTest.kt
