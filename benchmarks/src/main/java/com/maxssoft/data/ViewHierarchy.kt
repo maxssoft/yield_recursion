@@ -8,11 +8,12 @@ package com.maxssoft.data
 
 interface View {
     val id: Int
+    val name: String?
 }
 
-class SimpleView(override val id: Int): View
+class SimpleView(override val id: Int, override val name: String? = null): View
 
-class ViewGroup(override val id: Int): View {
+class ViewGroup(override val id: Int, override val name: String? = null): View {
     val child = mutableListOf<View>()
 }
 

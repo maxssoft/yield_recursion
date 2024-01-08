@@ -5,7 +5,8 @@ import com.maxssoft.func.findViewDeepRecursive
 import com.maxssoft.func.findViewQueue
 import com.maxssoft.func.findViewRecursion
 import com.maxssoft.func.findViewRecursionOpt
-import com.maxssoft.func.findViewTreeIterator
+import com.maxssoft.func.findViewTreeIteratorBSF
+import com.maxssoft.func.findViewTreeIteratorDSF
 import com.maxssoft.func.findViewYield
 import com.maxssoft.test.factory.HierarchyFactory
 import kotlinx.benchmark.Benchmark
@@ -29,7 +30,7 @@ class RecursionTest {
 
     private val hierarchyFactory = HierarchyFactory()
 
-    val rootView = hierarchyFactory.createHierarchy(1000).also { root ->
+    val rootView = hierarchyFactory.createHierarchy(5000).also { root ->
         runCatching {
             root.findViewRecursion { it.id % 10 == 0  }.also {
                 println("findViewSimple: size = ${it.size}")
@@ -55,7 +56,13 @@ class RecursionTest {
         }.getOrElse { println("findViewYield: failed, Exception: $it") }
 
         runCatching {
-            root.findViewTreeIterator { it.id % 10 == 0 }.also {
+            root.findViewTreeIteratorDSF { it.id % 10 == 0 }.also {
+                println("findViewTreeIterator: size = ${it.count()}")
+            }
+        }.getOrElse { println("findViewTreeIterator: failed, Exception: $it") }
+
+        runCatching {
+            root.findViewTreeIteratorBSF { it.id % 10 == 0 }.also {
                 println("findViewTreeIterator: size = ${it.count()}")
             }
         }.getOrElse { println("findViewTreeIterator: failed, Exception: $it") }
@@ -88,8 +95,13 @@ class RecursionTest {
     }
 
     @Benchmark
-    fun treeIteratorBenchmark(): List<View> {
-        return rootView.findViewTreeIterator { it.id % 10 == 0  }.toList()
+    fun treeIteratorDsfBenchmark(): List<View> {
+        return rootView.findViewTreeIteratorDSF { it.id % 10 == 0  }.toList()
+    }
+
+    @Benchmark
+    fun treeIteratorBsfBenchmark(): List<View> {
+        return rootView.findViewTreeIteratorBSF { it.id % 10 == 0  }.toList()
     }
 
     @Benchmark

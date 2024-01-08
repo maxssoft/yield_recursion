@@ -42,6 +42,52 @@ class HierarchyFactory {
         return root
     }
 
+    /**
+     * Create test tree for testing tree traversal algorithms
+     *             A
+     *            / \
+     *           B   C
+     *         / \    \
+     *        D  E     F
+     *          / \     \
+     *         G   H     I
+     *            /     / \
+     *           J     K   L
+     *                /
+     *               M
+     */
+    fun createTestTree(): ViewGroup {
+        viewCounter = 0
+        val root = ViewGroup(newId(), "A").also { a ->
+            a.addViewGroup("B").also { b ->
+                b.addView("D")
+                b.addViewGroup("E").also { e ->
+                    e.addView("G")
+                    e.addViewGroup("H").also { h ->
+                        h.addView("J")
+                    }
+                }
+            }
+            a.addViewGroup("C").also { c ->
+                c.addViewGroup("F").also { f ->
+                    f.addViewGroup("I").also { i->
+                        i.addViewGroup("K").also { k->
+                            k.addView("M")
+                        }
+                        i.addView("L")
+                    }
+                }
+            }
+        }
+        return root
+    }
+
+    private fun ViewGroup.addViewGroup(name: String? = null): ViewGroup =
+        ViewGroup(newId(), name).also { child.add(it) }
+
+    private fun ViewGroup.addView(name: String? = null): SimpleView =
+        SimpleView(newId(), name).also { child.add(it) }
+
     private var viewCounter: Int = 0
     private fun newId(): Int = viewCounter++
 
