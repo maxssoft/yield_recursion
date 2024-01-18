@@ -57,7 +57,7 @@ RecursionTest.yieldBenchmark            thrpt           6,208          ops/s
 main summary:
 Benchmark                                Mode  Cnt     Score   Error  Units
 RecursionTest.recursionBenchmark         failed (StackOverflow)
-RecursionTest.queueBenchmark            thrpt       5038,041          ops/s
+RecursionTest.queueBenchmark            thrpt       3245,041          ops/s
 RecursionTest.treeIteratorBsfBenchmark  thrpt       2997,227          ops/s
 RecursionTest.treeIteratorDsfBenchmark  thrpt       2784,729          ops/s
 RecursionTest.deepRecursiveBenchmark    thrpt       1504,135          ops/s
