@@ -7,22 +7,22 @@ import java.util.LinkedList
 
 /**
  * Create instance of a tree iterator to lazily iterate by hierarchy
+ * @param root root element of the tree
  * @param traversalType traversal algorithm type [TraversalType], [TraversalType.BFS] by default
- * @param rootIterator iterator of tree root
- * @param getChildIterator get child iterator for current item of tree
+ * @param getChildIterator get child iterator for current item of the tree
  *      if current item has child return child iterator else return null
  *
  * Example of using for ViewGroup hierarchy
- * TreeIterator<View>(TraversalType.DFS, viewGroup.children.iterator) { (it as? ViewGroup)?.children?.iterator() }
+ * TreeIterator<View>(TraversalType.DFS, viewGroup) { (it as? ViewGroup)?.children?.iterator() }
  */
 fun <T> treeIteratorOf(
+    root: T,
     traversalType: TraversalType = TraversalType.BFS,
-    rootIterator: Iterator<T>,
     getChildIterator: ((T) -> Iterator<T>?)
 ): Iterator<T> =
     when (traversalType) {
-        TraversalType.BFS -> TreeIteratorBFS(rootIterator, getChildIterator)
-        TraversalType.DFS -> TreeIteratorDFS(rootIterator, getChildIterator)
+        TraversalType.BFS -> TreeIteratorBFS(root, getChildIterator)
+        TraversalType.DFS -> TreeIteratorDFS(root, getChildIterator)
     }
 
 /**
@@ -42,16 +42,16 @@ enum class TraversalType {
 
 /**
  * Tree iterator with traversal algorithm DSF [TraversalType.DFS]
- * @param rootIterator iterator of tree root
- * @param getChildIterator get child iterator for current item of tree
+ * @param root root element of the tree
+ * @param getChildIterator get child iterator for current item of the tree
  */
 private class TreeIteratorDFS<T>(
-    rootIterator: Iterator<T>,
+    root: T,
     private val getChildIterator: ((T) -> Iterator<T>?)
 ) : Iterator<T> {
     private val stack = mutableListOf<Iterator<T>>()
 
-    private var iterator: Iterator<T> = rootIterator
+    private var iterator = listOf(root).iterator()
 
     override fun hasNext(): Boolean {
         return iterator.hasNext()
@@ -86,16 +86,16 @@ private class TreeIteratorDFS<T>(
 
 /**
  * Tree iterator with traversal algorithm BSF [TraversalType.BFS]
- * @param rootIterator iterator of tree root
- * @param getChildIterator get child iterator for current item of tree
+ * @param root root element of the tree
+ * @param getChildIterator get child iterator for current item of the tree
  */
 private class TreeIteratorBFS<T>(
-    rootIterator: Iterator<T>,
+    root: T,
     private val getChildIterator: ((T) -> Iterator<T>?)
 ) : Iterator<T> {
     private val queue = LinkedList<Iterator<T>>()
 
-    private var iterator: Iterator<T> = rootIterator
+    private var iterator: Iterator<T> = listOf(root).iterator()
 
     override fun hasNext(): Boolean {
         val hasNext = when {
@@ -131,7 +131,7 @@ private class TreeIteratorBFS<T>(
  * This function works hundreds of times faster than the original function descendants
  */
 public val ViewGroup.descendantsTree: Sequence<View>
-    get() = treeIteratorOf(rootIterator = children.iterator()) { view ->
+    get() = treeIteratorOf<View>(this) { view ->
         (view as? ViewGroup)?.children?.iterator()
     }.asSequence()
 
@@ -139,12 +139,10 @@ public val ViewGroup.descendantsTree: Sequence<View>
  * Find views by hierarchy with predicate by DSF algorithm
  */
 fun ViewGroup.findViewTreeIteratorDSF(predicate: (View) -> Boolean): Sequence<View> {
-    return sequenceOf(this)
-        .plus(
-            treeIteratorOf(traversalType = TraversalType.DFS, rootIterator = children.iterator()) { view ->
+    return treeIteratorOf<View>(this, TraversalType.DFS) { view ->
                 (view as? ViewGroup)?.children?.iterator()
-            }.asSequence()
-        )
+            }
+        .asSequence()
         .filter { predicate(it) }
 }
 
@@ -152,11 +150,9 @@ fun ViewGroup.findViewTreeIteratorDSF(predicate: (View) -> Boolean): Sequence<Vi
  * Find views by hierarchy with predicate by BSF algorithm
  */
 fun ViewGroup.findViewTreeIteratorBSF(predicate: (View) -> Boolean): Sequence<View> {
-    return sequenceOf(this)
-        .plus(
-            treeIteratorOf(traversalType = TraversalType.BFS, rootIterator = children.iterator()) { view ->
+    return treeIteratorOf<View>(this, TraversalType.BFS) { view ->
                 (view as? ViewGroup)?.children?.iterator()
-            }.asSequence()
-        )
+            }
+        .asSequence()
         .filter { predicate(it) }
 }

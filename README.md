@@ -22,7 +22,9 @@ https://github.com/maxssoft/yield_recursion/blob/develop/benchmarks/src/main/jav
  * Optimized descendants function based on lazy [TreeIterator]
  */
 public val ViewGroup.descendants: Sequence<View>
-    get() = TreeIterator(children.iterator()) { (it as? ViewGroup)?.children?.iterator() }.asSequence()
+    get() = treeIteratorOf<View>(this) { view ->
+        (view as? ViewGroup)?.children?.iterator()
+    }.asSequence()
 ```
 
 
@@ -30,22 +32,24 @@ public val ViewGroup.descendants: Sequence<View>
 ```
 main summary:
 Benchmark                                Mode  Cnt      Score   Error  Units
-RecursionTest.deepRecursiveBenchmark     thrpt       10882,973          ops/s
-RecursionTest.recursionBenchmark         thrpt       52938,324          ops/s
-RecursionTest.queueBenchmark             thrpt       21272,334          ops/s
-RecursionTest.treeIteratorBenchmark      thrpt       10799,548          ops/s
-RecursionTest.yieldBenchmark             thrpt          77,978          ops/s
+RecursionTest.recursionBenchmark        thrpt       45083,831          ops/s
+RecursionTest.queueBenchmark            thrpt       14742,257          ops/s
+RecursionTest.treeIteratorBsfBenchmark  thrpt       14630,246          ops/s
+RecursionTest.treeIteratorDsfBenchmark  thrpt       15337,562          ops/s
+RecursionTest.deepRecursiveBenchmark    thrpt       10224,572          ops/s
+RecursionTest.yieldBenchmark            thrpt          73,755          ops/s
 ```
 
 ***depth of hierarchy = 3000***
 ```
 main summary:
 Benchmark                                Mode  Cnt      Score   Error  Units
-RecursionTest.deepRecursiveBenchmark     thrpt        3252,411          ops/s
-RecursionTest.recursionBenchmark         thrpt       16950,018          ops/s
-RecursionTest.queueBenchmark             thrpt        7000,821          ops/s
-RecursionTest.treeIteratorBenchmark      thrpt        3554,500          ops/s
-RecursionTest.yieldBenchmark             thrpt           6,244          ops/s
+RecursionTest.recursionBenchmark        thrpt       16734,099          ops/s
+RecursionTest.queueBenchmark            thrpt        5999,774          ops/s
+RecursionTest.treeIteratorBsfBenchmark  thrpt        4752,470          ops/s
+RecursionTest.treeIteratorDsfBenchmark  thrpt        4973,743          ops/s
+RecursionTest.deepRecursiveBenchmark    thrpt        3280,082          ops/s
+RecursionTest.yieldBenchmark            thrpt           6,208          ops/s
 ```
 
 ***depth of hierarchy = 5000***
@@ -53,9 +57,10 @@ RecursionTest.yieldBenchmark             thrpt           6,244          ops/s
 main summary:
 Benchmark                                Mode  Cnt     Score   Error  Units
 RecursionTest.recursionBenchmark         failed (StackOverflow)
-RecursionTest.deepRecursiveBenchmark     thrpt       1877,835          ops/s
-RecursionTest.queueBenchmark             thrpt       4928,906          ops/s
-RecursionTest.treeIteratorBenchmark      thrpt       2483,408          ops/s
-RecursionTest.yieldBenchmark             thrpt          2,240          ops/s
+RecursionTest.queueBenchmark            thrpt       5038,041          ops/s
+RecursionTest.treeIteratorBsfBenchmark  thrpt       2997,227          ops/s
+RecursionTest.treeIteratorDsfBenchmark  thrpt       2784,729          ops/s
+RecursionTest.deepRecursiveBenchmark    thrpt       1504,135          ops/s
+RecursionTest.yieldBenchmark            thrpt          2,430          ops/s
 ```
 test source:  https://github.com/maxssoft/yield_recursion/blob/develop/benchmarks/src/main/java/com/maxssoft/test/RecursionTest.kt

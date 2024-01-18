@@ -57,15 +57,15 @@ class RecursionTest {
 
         runCatching {
             root.findViewTreeIteratorDSF { it.id % 10 == 0 }.also {
-                println("findViewTreeIterator: size = ${it.count()}")
+                println("findViewTreeIteratorDSF: size = ${it.count()}")
             }
-        }.getOrElse { println("findViewTreeIterator: failed, Exception: $it") }
+        }.getOrElse { println("findViewTreeIteratorDSF: failed, Exception: $it") }
 
         runCatching {
             root.findViewTreeIteratorBSF { it.id % 10 == 0 }.also {
-                println("findViewTreeIterator: size = ${it.count()}")
+                println("findViewTreeIteratorBSF: size = ${it.count()}")
             }
-        }.getOrElse { println("findViewTreeIterator: failed, Exception: $it") }
+        }.getOrElse { println("findViewTreeIteratorBSF: failed, Exception: $it") }
 
         runCatching {
             root.findViewDeepRecursive { it.id % 10 == 0 }.also {
@@ -74,7 +74,7 @@ class RecursionTest {
         }.getOrElse { println("findViewDeepRecursive: failed, Exception: $it") }
     }
 
-    @Benchmark
+    // @Benchmark()
     fun simpleBenchmark(): List<View> {
         return rootView.findViewRecursion { it.id % 10 == 0  }
     }

@@ -1,3 +1,4 @@
+import com.maxssoft.data.View
 import com.maxssoft.data.ViewGroup
 import com.maxssoft.data.children
 import com.maxssoft.func.TraversalType
@@ -19,11 +20,8 @@ class TreeIteratorITest {
 
     @Test
     fun dsfTest() {
-        val expected = "B,D,E,G,H,J,C,F,I,K,M,L,"
-        val sequence = treeIteratorOf(
-            traversalType = TraversalType.DFS,
-            rootIterator = rootView.children.iterator()
-        ) { view ->
+        val expected = "A,B,D,E,G,H,J,C,F,I,K,M,L,"
+        val sequence = treeIteratorOf<View>(rootView, TraversalType.DFS) { view ->
             (view as? ViewGroup)?.children?.iterator()
         }.asSequence()
         val actual = sequence.fold("") { value, view -> value + "${view.name}," }
@@ -36,11 +34,8 @@ class TreeIteratorITest {
 
     @Test
     fun bsfTest() {
-        val expected = "B,C,D,E,F,G,H,I,J,K,L,M,"
-        val sequence = treeIteratorOf(
-            traversalType = TraversalType.BFS,
-            rootIterator = rootView.children.iterator()
-        ) { view ->
+        val expected = "A,B,C,D,E,F,G,H,I,J,K,L,M,"
+        val sequence = treeIteratorOf<View>(rootView, TraversalType.BFS) { view ->
             (view as? ViewGroup)?.children?.iterator()
         }.asSequence()
         val actual = sequence.fold("") { value, view -> value + "${view.name}," }
