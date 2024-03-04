@@ -63,6 +63,7 @@ private class TreeIteratorDFS<T>(
         return item
     }
 
+
     /**
      * calculate next iterator for [item]
      * if current item has child then get child iterator and save current iterator to stack
@@ -89,42 +90,39 @@ private class TreeIteratorDFS<T>(
  * @param root root element of the tree
  * @param getChildIterator get child iterator for current item of the tree
  */
-private class TreeIteratorBFS<T>(
-    root: T,
-    private val getChildIterator: ((T) -> Iterator<T>?)
-) : Iterator<T> {
-    private val queue = LinkedList<Iterator<T>>()
+    private class TreeIteratorBFS<T>(
+        root: T,
+        private val getChildIterator: ((T) -> Iterator<T>?)
+    ) : Iterator<T> {
+        private val queue = LinkedList<Iterator<T>>()
 
-    private var iterator: Iterator<T> = listOf(root).iterator()
+        private var iterator: Iterator<T> = listOf(root).iterator()
 
-    override fun hasNext(): Boolean {
-        val hasNext = when {
-            iterator.hasNext() -> true
-            queue.isNotEmpty() -> {
-                iterator = queue.pollFirst()
-                true
+        override fun next(): T {
+            val item = iterator.next()
+            addChildIterator(item)
+            return item
+        }
+
+        private fun addChildIterator(item: T) {
+            val childIterator = getChildIterator(item)
+            if (childIterator != null && childIterator.hasNext()) {
+                queue.add(childIterator)
             }
-            else -> false
         }
-        return hasNext
-    }
 
-    override fun next(): T {
-        val item = iterator.next()
-        addChildIterator(item)
-        return item
-    }
-
-    /**
-     * add child iterator to queue for current item [item]
-     */
-    private fun addChildIterator(item: T) {
-        val childIterator = getChildIterator(item)
-        if (childIterator != null && childIterator.hasNext()) {
-            queue.add(childIterator)
+        override fun hasNext(): Boolean {
+            val hasNext = when {
+                iterator.hasNext() -> true
+                queue.isNotEmpty() -> {
+                    iterator = queue.pollFirst()
+                    true
+                }
+                else -> false
+            }
+            return hasNext
         }
     }
-}
 
 /**
  * Optimized descendants function based on lazy [TreeIterator]
@@ -156,3 +154,11 @@ fun ViewGroup.findViewTreeIteratorBSF(predicate: (View) -> Boolean): Sequence<Vi
         .asSequence()
         .filter { predicate(it) }
 }
+
+    fun ViewGroup.findViewTreeIterator(predicate: (View) -> Boolean): Sequence<View> {
+        return TreeIteratorBFS<View>(this) { view ->
+            (view as? ViewGroup)?.children?.iterator()
+        }
+            .asSequence()
+            .filter { predicate(it) }
+    }
