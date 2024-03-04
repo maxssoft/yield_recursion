@@ -1,6 +1,8 @@
 package com.maxssoft.test
 
+import com.maxssoft.blackhole.collectBlackHole
 import kotlinx.benchmark.Benchmark
+import kotlinx.benchmark.Blackhole
 import kotlinx.benchmark.Measurement
 import kotlinx.benchmark.Scope
 import kotlinx.benchmark.Setup
@@ -11,8 +13,8 @@ import java.util.concurrent.TimeUnit
 
 @State(Scope.Benchmark)
 @Fork(1)
-@Warmup(iterations = 0)
-@Measurement(iterations = 1, time = 20, timeUnit = TimeUnit.MINUTES)
+@Warmup(iterations = 3, time = 10, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 25)
 class YieldTest {
 
     private lateinit var list: List<Int>
@@ -23,22 +25,14 @@ class YieldTest {
     }
 
     @Benchmark
-    fun iteratorBenchmark(): List<Int> {
-        var result = mutableListOf<Int>()
-        val iterator = sequence {
+    fun iteratorBenchmark(blackHole: Blackhole) {
+        sequence {
             list.forEach { yield(it) }
-        }.iterator()
-
-        iterator.forEach { result.add(it) }
-        return result
+        }.collectBlackHole(blackHole)
     }
 
     @Benchmark
-    fun yieldBenchmark(): List<Int> {
-        var result = mutableListOf<Int>()
-        val iterator = list.iterator()
-
-        iterator.forEach { result.add(it) }
-        return result
+    fun yieldBenchmark(blackHole: Blackhole) {
+        list.iterator().collectBlackHole(blackHole)
     }
 }

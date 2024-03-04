@@ -1,5 +1,6 @@
 package com.maxssoft.test
 
+import com.maxssoft.blackhole.collectBlackHole
 import com.maxssoft.data.View
 import com.maxssoft.data.ViewGroup
 import com.maxssoft.func.findViewDeepRecursive
@@ -11,6 +12,7 @@ import com.maxssoft.func.findViewTreeIteratorDSF
 import com.maxssoft.func.findViewYield
 import com.maxssoft.test.factory.HierarchyFactory
 import kotlinx.benchmark.Benchmark
+import kotlinx.benchmark.Blackhole
 import kotlinx.benchmark.Measurement
 import kotlinx.benchmark.Scope
 import kotlinx.benchmark.Setup
@@ -82,38 +84,38 @@ class RecursionTest {
         }
     }
 
-    // @Benchmark()
-    fun simpleBenchmark(): List<View> {
-        return rootView.findViewRecursion { it.id % 10 == 0  }
+    @Benchmark()
+    fun simpleBenchmark(blackHole: Blackhole) {
+        rootView.findViewRecursion { it.id % 10 == 0  }.collectBlackHole(blackHole)
     }
 
     @Benchmark
-    fun recursionBenchmark(): List<View> {
-        return rootView.findViewRecursionOpt { it.id % 10 == 0  }
+    fun recursionBenchmark(blackHole: Blackhole) {
+        rootView.findViewRecursionOpt { it.id % 10 == 0  }.collectBlackHole(blackHole)
     }
 
     @Benchmark
-    fun queueBenchmark(): List<View> {
-        return rootView.findViewQueue { it.id % 10 == 0  }
+    fun queueBenchmark(blackHole: Blackhole) {
+        rootView.findViewQueue { it.id % 10 == 0  }.collectBlackHole(blackHole)
     }
 
     @Benchmark
-    fun yieldBenchmark(): List<View> {
-        return rootView.findViewYield { it.id % 10 == 0  }.toList()
+    fun yieldBenchmark(blackHole: Blackhole) {
+        rootView.findViewYield { it.id % 10 == 0  }.collectBlackHole(blackHole)
     }
 
     @Benchmark
-    fun treeIteratorDsfBenchmark(): List<View> {
-        return rootView.findViewTreeIteratorDSF { it.id % 10 == 0  }.toList()
+    fun treeIteratorDsfBenchmark(blackHole: Blackhole) {
+        rootView.findViewTreeIteratorDSF { it.id % 10 == 0  }.collectBlackHole(blackHole)
     }
 
     @Benchmark
-    fun treeIteratorBsfBenchmark(): List<View> {
-        return rootView.findViewTreeIteratorBSF { it.id % 10 == 0  }.toList()
+    fun treeIteratorBsfBenchmark(blackHole: Blackhole) {
+        rootView.findViewTreeIteratorBSF { it.id % 10 == 0  }.collectBlackHole(blackHole)
     }
 
     @Benchmark
-    fun deepRecursiveBenchmark(): List<View> {
-        return rootView.findViewDeepRecursive { it.id % 10 == 0  }
+    fun deepRecursiveBenchmark(blackHole: Blackhole) {
+        rootView.findViewDeepRecursive { it.id % 10 == 0  }.collectBlackHole(blackHole)
     }
 }

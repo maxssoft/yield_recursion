@@ -30,8 +30,11 @@ dependencies {
 benchmark {
     configurations {
         named("main") {
-            iterationTime = 5
-            iterationTimeUnit = "sec"
+            mode = "avgt" // mode = "avgt" / "thrpt"
+            iterations = 25
+            // include("run") // move classes which you want to run to the package "run"
+            outputTimeUnit = "ns" // outputTimeUnit = "us" / "ms" / "sec" / "ns"
+            reportFormat = "text"
         }
     }
     targets {
