@@ -1,7 +1,6 @@
-package com.maxssoft.test
+package com.maxssoft.test.run
 
 import com.maxssoft.blackhole.collectBlackHole
-import com.maxssoft.data.View
 import com.maxssoft.data.ViewGroup
 import com.maxssoft.func.findViewDeepRecursive
 import com.maxssoft.func.findViewQueue
@@ -13,7 +12,6 @@ import com.maxssoft.func.findViewYield
 import com.maxssoft.test.factory.HierarchyFactory
 import kotlinx.benchmark.Benchmark
 import kotlinx.benchmark.Blackhole
-import kotlinx.benchmark.Measurement
 import kotlinx.benchmark.Scope
 import kotlinx.benchmark.Setup
 import kotlinx.benchmark.State
@@ -29,7 +27,6 @@ import java.util.concurrent.TimeUnit
 @State(Scope.Benchmark)
 @Fork(1)
 @Warmup(iterations = 3, time = 10, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations = 25)
 class RecursionTest {
 
     private lateinit var rootView: ViewGroup
